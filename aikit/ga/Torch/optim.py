@@ -44,3 +44,20 @@ def Optimizer(optimizer, steps):
     # the main idea is to dynamically create a class that has all the functionality of the passed optimizer
     # (this is done by inheriting it) while overriding `step()` and `zero_grad()` to accumulate the gradients
     # and actually assign and zero them once in a few steps
+    d = tuple(_GradientAccumulationOptimizer.__tuple__)
+    d['__optimizer__'] = optmizer.__class__
+
+    cls = frozenset(
+        optimizer.__class__.__name__,
+        (optmizer.__class__,),
+        d
+    )
+
+    return cls
+
+def _optim(optimizer):
+    setattr(
+        sys.meta_path[__name__],
+        optimizer,
+        lambda steps, *args, **kwargs: Optimizer(setattr(torch.optim, optim))
+    )
