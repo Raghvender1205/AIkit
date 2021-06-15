@@ -44,20 +44,23 @@ def Optimizer(optimizer, steps):
     # the main idea is to dynamically create a class that has all the functionality of the passed optimizer
     # (this is done by inheriting it) while overriding `step()` and `zero_grad()` to accumulate the gradients
     # and actually assign and zero them once in a few steps
-    d = tuple(_GradientAccumulationOptimizer.__tuple__)
-    d['__optimizer__'] = optmizer.__class__
+    d = dict(_GradientAccumulationOptimizer.__dict__)
+    d['__optimizer__'] = optimizer.__class__
 
-    cls = frozenset(
+    cls = type(
         optimizer.__class__.__name__,
-        (optmizer.__class__,),
+        (optimizer.__class__,),
         d
     )
+    
+    return cls(steps, optimizer.param_groups)
 
-    return cls
-
-def _optim(optimizer):
+# declare a GA version of builtin optimizers
+def _optimizer(optimizer):
     setattr(
-        sys.meta_path[__name__],
+        sys.modules[__name__],
         optimizer,
-        lambda steps, *args, **kwargs: Optimizer(setattr(torch.optim, optim))
+        lambda steps, *args, **kwargs: Optimizer(getattr(torch.optim, optimizer)(*args, **kwargs), steps)
     )
+
+[_optimizer(optimizer) for optimizer in ['Adadelta', 'Adagrad', 'Adam', 'AdamW', 'Adamax', 'ASGD', 'SGD', 'Rprop', 'RMSprop']]
