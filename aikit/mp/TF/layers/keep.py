@@ -77,3 +77,4 @@ class Keep(layers.Layer):
         '''
         Create an MP-supported TF Keras layer with 'Keep' logic
         '''
+        return type(name, (Keep, getattr(layers, name)), {})
