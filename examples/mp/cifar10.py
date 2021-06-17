@@ -351,7 +351,7 @@ def run(epochs=200, batch_size=32, init_lr=1e-3, version=2, n=6, subtract_pixel_
     model = get_model(version, input_shape, depth, init_lr)
 
     # Tensorboard location
-    if os.getenv('AIKTI_TENSORBOARD_DIR'):
+    if os.getenv('AIKIT_TENSORBOARD_DIR'):
         outputs_dir = '/aikit/outputs/'
     else:
         outputs_dir = '/tmp/'
