@@ -1,3 +1,4 @@
+import tensorflow as tf
 import tensorflow.keras
 import tensorflow.keras.optimizers
 from tensorflow.keras.layers import Dense, Dropout
@@ -8,7 +9,7 @@ from tensorflow.keras.datasets import mnist
 import aikit.ga.TF.optimizers
 import aikit.profiler
 
-runai.profiler.profile(20, '/projects/runai')
+aikit.profiler.profile(20, '/projects/runai')
 
 
 num_classes = 10
@@ -27,8 +28,8 @@ print(x_train.shape[0], 'train samples')
 print(x_test.shape[0], 'test samples')
 
 # convert class vectors to binary class matrices
-y_train = keras.utils.to_categorical(y_train, num_classes)
-y_test = keras.utils.to_categorical(y_test, num_classes)
+y_train = tf.keras.utils.to_categorical(y_train, num_classes)
+y_test = tf.keras.utils.to_categorical(y_test, num_classes)
 
 model = Sequential()
 model.add(Dense(512, activation='relu', input_shape=(784,)))
